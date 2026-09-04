@@ -1,0 +1,65 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum McpServerStatus {
+  PENDING
+  CRAWLING
+  EMBEDDING
+  READY
+  FAILED
+}
+
+model User {
+  id           String      @id @default(uuid())
+  email        String      @unique
+  name         String?
+  passwordHash String
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  mcpServers   McpServer[]
+
+  @@map("users")
+}
+
+model McpServer {
+  id                String          @id @default(uuid())
+  userId            String
+  name              String
+  description       String?
+  rootUrl           String
+  status            McpServerStatus @default(READY)
+  apiKey            String          @unique @default(uuid())
+  embeddingProvider String          @default("openai") // "openai" | "local"
+  embeddingModel    String          @default("text-embedding-3-small")
+  totalPages        Int             @default(0)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pages             Page[]
+
+  @@index([userId])
+  @@map("mcp_servers")
+}
+
+model Page {
+  id              String    @id @default(uuid())
+  mcpServerId     String
+  url             String
+  title           String?
+  markdownContent String?   @db.Text
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  mcpServer       McpServer @relation(fields: [mcpServerId], references: [id], onDelete: Cascade)
+
+  @@index([mcpServerId])
+  @@map("pages")
+}
