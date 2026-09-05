@@ -1,6 +1,6 @@
 # ==============================================================================
 # Optional / Alternative Local Development Stack
-# Note: Primary development flow uses Serverless PostgreSQL (Neon / Supabase).
+# Note: If you use Serverless PostgreSQL (Neon / Supabase). this file dosenot matter.
 # If you prefer running PostgreSQL locally, use this Docker Compose configuration.
 # ==============================================================================
 
@@ -14,7 +14,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: docsfeed
     ports:
-      - '5432:5432'
+      - '5433:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
