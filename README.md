@@ -1,140 +1,158 @@
 <div align="center">
+# DocsFeed MCP
 
-# ⚡ DocsFeed MCP
-
-**Turn any documentation site into a live, authenticated Model Context Protocol (MCP) server for your AI agents.**
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D20-green.svg)](https://nodejs.org/)
-[![Model Context Protocol](https://img.shields.io/badge/Protocol-MCP-purple.svg)](https://modelcontextprotocol.io/)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
-
-[Features](#-key-features) • [Our Mission](#-our-mission) • [How It Works](#-how-it-works) • [Quickstart](#-quickstart) • [Connecting to AI Clients](#-connecting-to-ai-clients) • [Contributing](#-contributing)
-
+Convert documentation sites into authenticated Model Context Protocol (MCP) servers for AI editors and agents.
 </div>
 
 ---
 
-## 🎯 Our Mission
+## Why DocsFeed?
 
-AI coding assistants and autonomous agents are only as good as the context they have. When documentation changes, libraries release new versions, or internal APIs evolve, language models hallucinate or generate outdated code.
+LLMs produce stale code when APIs shift and internal libraries release updates. Pasting documentation into chat windows breaks workflow and context limits.
 
-**DocsFeed MCP bridges this gap.** 
+DocsFeed automates the pipeline:
 
-Our mission is to give every developer and AI agent instantaneous access to up-to-date documentation. Simply paste any documentation URL—DocsFeed crawls it, extracts structured content, embeds it, and provides a dedicated, secured **Model Context Protocol (MCP)** endpoint that connects seamlessly to Claude, Cursor, Windsurf, or any MCP-compatible client.
-
-No more copying and pasting markdown or dealing with stale knowledge cutoffs.
-
----
-
-## ✨ Key Features
-
-- 🌐 **Instant URL to MCP Server**: Point to any documentation website or sitemap and convert it into a live MCP server in minutes.
-- ⚡ **Real-time Doc Querying**: Exposes powerful native MCP tools like `search_docs`, `get_page`, and `list_sections` directly to your AI agents.
-- 🔒 **Per-Source API Key Security**: Each doc source gets its own isolated endpoint and hashed API key—safe for multi-agent workflows.
-- 📊 **Visual Management Dashboard**: A clean Next.js dashboard to create, inspect, re-crawl, and monitor all your documentation feeds.
-- 🧩 **Pluggable Embeddings**: Run completely free and local with **Ollama** or scale with **OpenAI** embeddings.
-- ☁️ **Zero-Redis & Serverless-Ready**: Runs effortlessly on serverless Postgres (Neon / Supabase) with zero extra infrastructure headaches.
+1. **Crawl & Parse:** Ingests documentation from URLs/sitemaps into clean Markdown chunks.
+2. **Embed & Index:** Indexes chunks using OpenAI, Gemini, or local Ollama embeddings with `pgvector`.
+3. **Serve via MCP:** Exposes native search tools to your editor through authenticated endpoints.
 
 ---
 
-## 🔄 How It Works
+## Features
+
+* **Automated Ingestion:** Crawl sitemaps or nested documentation trees automatically.
+* **Native MCP Tools:** AI agents query documentation using structured tools (`search_docs`, `get_page`, `list_sections`).
+* **Scoped API Keys:** Each documentation feed generates an isolated endpoint with an authenticated bearer token.
+* **Flexible Embedding Providers:** Use OpenAI, Gemini, or run entirely offline using Ollama (`nomic-embed-text`).
+* **Management UI:** Built-in Next.js interface to manage crawls, verify indexed pages, and monitor sync status.
+
+---
+
+## Architecture Overview
 
 ```
- ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
- │   Submit URL    │ ───►  │ Crawl & Vector  │ ───►  │ Live MCP Server │
- │ (Any Doc Site)  │       │   Processing    │       │ (Secure API Key)│
- └─────────────────┘       └─────────────────┘       └─────────────────┘
-                                                              │
-                                                              ▼
-                                                   ┌─────────────────────┐
-                                                   │  AI Agents / IDEs   │
-                                                   │  • Cursor / Claude  │
-                                                   │  • Windsurf / Agents│
-                                                   └─────────────────────┘
-```
+[ Doc URL / Sitemap ]
+         │
+         ▼
+[ Crawler & Parser ] ───► [ Embeddings Engine ]
+                                 │ (OpenAI / Gemini / Ollama)
+                                 ▼
+                     [ PostgreSQL + pgvector ]
+                                 │
+                                 ▼
+                      [ DocsFeed MCP Server ]
+                                 │
+                ┌────────────────┼────────────────┐
+                ▼                ▼                ▼
+         Cursor / Windsurf  Claude Desktop   Custom Agents
 
-1. **Submit**: Enter the root URL of any framework, library, or API doc site in the dashboard.
-2. **Process**: DocsFeed crawls the pages, converts them into clean structured Markdown, and creates semantic embeddings.
-3. **Connect**: Copy your generated MCP server URL and API key into your favorite AI tool and start querying live documentation with perfect accuracy.
+```
 
 ---
 
-## 🚀 Quickstart
+## Quickstart
 
-Get up and running locally in under 3 minutes:
+### Prerequisites
 
-### 1. Clone & Install
+* Node.js `>= 20.0.0`
+* Docker (recommended for local PostgreSQL) or a serverless PostgreSQL instance (Neon / Supabase)
+
+### 1. Clone & Install Dependencies
+
 ```bash
 git clone https://github.com/sajannethsara/DocsFeed-MCP.git
 cd DocsFeed-MCP
 npm install
+
 ```
 
 ### 2. Configure Environment
-```bash
-# Copy template config
-cp .env.example .env
-```
-*(Add your PostgreSQL connection string from [Neon](https://neon.tech/) / [Supabase](https://supabase.com/) or local Postgres in `.env`)*
 
-### 3. Migrate & Seed Sample Data
+Copy the example environment file:
+
 ```bash
+cp .env.example .env
+
+```
+
+Configure your database and embedding provider credentials in `.env`:
+
+```env
+# Database (Local Docker instance)
+DATABASE_URL="postgresql://postgres:postgres@localhost:5432/docsfeed?schema=public"
+
+# Embeddings (Choose one)
+OPENAI_API_KEY="your-openai-key"
+# GEMINI_API_KEY="your-gemini-key"
+# OLLAMA_BASE_URL="http://localhost:11434"
+
+```
+
+### 3. Start Database & Apply Migrations
+
+If using Docker:
+
+```bash
+npm run docker:up
 npm run prisma:generate
 npm run prisma:migrate
 npm run prisma:seed
+
 ```
 
-### 4. Run Development Servers
+### 4. Start the Application
+
 ```bash
 npm run dev
+
 ```
 
-- 🌐 **Web Dashboard:** [http://localhost:3000](http://localhost:3000)
-- ⚙️ **API & MCP Server:** [http://localhost:4000](http://localhost:4000)
-- 📖 **Swagger API Docs:** [http://localhost:4000/api/docs](http://localhost:4000/api/docs)
-
-> [!TIP]
-> For a comprehensive setup walkthrough, local Docker options, and troubleshooting, check out our **[Contribution Guide](CONTRIBUTING.md)**.
+The web dashboard runs at `http://localhost:3000`, and the MCP backend service runs at `http://localhost:4000`.
 
 ---
 
-## 🔌 Connecting to AI Clients
+## Client Integration
 
-Once your documentation feed is active, connect it to any MCP-enabled tool:
+Once an endpoint is created via the dashboard, register it inside your editor's MCP configuration file.
 
-### Claude Desktop / Cursor / Windsurf MCP Configuration
-Add to your `mcpServers` settings:
+### Configuration (`mcpServers`)
+
+Add the following block to your configuration file (e.g., `claude_desktop_config.json` or Cursor MCP settings):
 
 ```json
 {
   "mcpServers": {
-    "docsfeed-nestjs": {
-      "url": "http://localhost:4000/mcp/your-doc-source-id",
+    "docsfeed-docs": {
+      "url": "http://localhost:4000/mcp/<SOURCE_ID>",
       "headers": {
-        "Authorization": "Bearer your-docsfeed-api-key"
+        "Authorization": "Bearer <YOUR_API_KEY>"
       }
     }
   }
 }
+
 ```
 
-Now your AI assistant can invoke tools like:
-- `search_docs({ query: "How to implement guards in NestJS" })`
-- `get_page({ path: "/controllers" })`
-- `list_sections()`
+### Available Agent Tools
+
+Connected clients can invoke the following tools during reasoning:
+
+| Tool | Parameters | Description |
+| --- | --- | --- |
+| `search_docs` | `query` (string) | Performs semantic similarity search across documentation chunks. |
+| `get_page` | `path` (string) | Retrieves the full raw Markdown content for a specific URL path. |
+| `list_sections` | *none* | Returns the table of contents and indexed document hierarchy. |
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-We welcome contributions of all kinds! Whether you're fixing bugs, adding new embedding providers, or improving documentation:
+Contributions are welcome. Please read the [Contributing Guide](https://www.google.com/search?q=CONTRIBUTING.md) for branch management rules, commit formats, and local testing procedures.
 
-- 📖 Read our **[Contributing Guide](CONTRIBUTING.md)** for developer setup, scripts, and conventions.
-- 💡 Submit feature ideas or report bugs via [GitHub Issues](https://github.com/sajannethsara/DocsFeed-MCP/issues).
+Report issues or submit feature proposals on the [GitHub Issues](https://github.com/sajannethsara/DocsFeed-MCP/issues) tracker.
 
 ---
 
-## 📄 License
+## License
 
-This project is licensed under the [MIT License](LICENSE).
+This project is licensed under the [MIT License](https://www.google.com/search?q=LICENSE).
