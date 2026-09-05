@@ -31,10 +31,10 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api/docs', app, document);
 
-  const port = process.env.PORT || 4000;
+  const port = process.env.PORT;
   await app.listen(port);
-  logger.log(`🚀 DocsFeed Server is running on: http://localhost:${port}`);
-  logger.log(`📖 Swagger API Docs available at: http://localhost:${port}/api/docs`);
+  logger.log(`DocsFeed Server is running on: http://localhost:${port}`);
+  logger.log(`Swagger API Docs available at: http://localhost:${port}/api/docs`);
 }
 
 bootstrap();

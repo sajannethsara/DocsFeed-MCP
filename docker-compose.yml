@@ -1,6 +1,6 @@
 # ==============================================================================
 # Optional / Alternative Local Development Stack
-# Note: Primary development flow uses Serverless PostgreSQL (Neon / Supabase).
+# Note: If you use Serverless PostgreSQL (Neon / Supabase). this file dosenot matter.
 # If you prefer running PostgreSQL locally, use this Docker Compose configuration.
 # ==============================================================================
 
