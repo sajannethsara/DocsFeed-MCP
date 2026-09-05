@@ -1,12 +1,10 @@
 <div align="center">
-# DocsFeed MCP
-
-Convert documentation sites into authenticated Model Context Protocol (MCP) servers for AI editors and agents.
+<img src="https://raw.githubusercontent.com/sajannethsara/DocsFeed-MCP/dev/banner.jpg" alt="DocsFeed MCP">
 </div>
 
 ---
 
-## Why DocsFeed?
+## Why DocsFeed MCP ?
 
 LLMs produce stale code when APIs shift and internal libraries release updates. Pasting documentation into chat windows breaks workflow and context limits.
 
