@@ -1,5 +1,5 @@
 <div align="center">
-<img src="https://raw.githubusercontent.com/sajannethsara/DocsFeed-MCP/dev/banner.jpg" alt="DocsFeed MCP">
+<img src="https://raw.githubusercontent.com/sajannethsara/DocsFeed-MCP/dev/Banner.jpg" alt="DocsFeed MCP">
 </div>
 
 ---
