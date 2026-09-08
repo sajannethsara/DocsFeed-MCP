@@ -131,26 +131,3 @@ Add the following block to your configuration file (e.g., `claude_desktop_config
 
 ```
 
-### Available Agent Tools
-
-Connected clients can invoke the following tools during reasoning:
-
-| Tool | Parameters | Description |
-| --- | --- | --- |
-| `search_docs` | `query` (string) | Performs semantic similarity search across documentation chunks. |
-| `get_page` | `path` (string) | Retrieves the full raw Markdown content for a specific URL path. |
-| `list_sections` | *none* | Returns the table of contents and indexed document hierarchy. |
-
----
-
-## Contributing
-
-Contributions are welcome. Please read the [Contributing Guide](https://www.google.com/search?q=CONTRIBUTING.md) for branch management rules, commit formats, and local testing procedures.
-
-Report issues or submit feature proposals on the [GitHub Issues](https://github.com/sajannethsara/DocsFeed-MCP/issues) tracker.
-
----
-
-## License
-
-This project is licensed under the [MIT License](https://www.google.com/search?q=LICENSE).
