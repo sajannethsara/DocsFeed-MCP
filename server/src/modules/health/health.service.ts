@@ -9,7 +9,6 @@ export class HealthService {
     try {
       const userCount = await this.prisma.user.count();
       const serverCount = await this.prisma.mcpServer.count();
-      const pageCount = await this.prisma.page.count();
 
       return {
         status: 'ok',
@@ -17,7 +16,6 @@ export class HealthService {
         stats: {
           users: userCount,
           mcpServers: serverCount,
-          pages: pageCount,
         },
       };
     } catch (err: unknown) {

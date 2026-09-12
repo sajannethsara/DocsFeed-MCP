@@ -159,14 +159,24 @@ OLLAMA_BASE_URL="http://localhost:11434"
 
 ## Default Seeded Accounts
 
-The seed script (`npm run prisma:seed`) provisions the following credentials for testing:
+The seed script (`npm run prisma:seed`) provisions three accounts for multi-tenant and status testing (all use password: `password123`):
 
-* **Demo User:** `demo@docsfeed.dev`
-* **Password:** `password123`
-* **Sample MCP Servers:**
-* `NestJS Official Docs` — Status: `READY` | Key: `df_live_nest_9f83a2bc81e74a1`
-* `Next.js App Router` — Status: `READY` | Key: `df_live_next_1d48c0ba49e29a3`
-* `Prisma ORM Docs` — Status: `CRAWLING` | Key: `df_live_prisma_7b29a1ee32c84f5`
+### 1. Alice Chen (`alice@docsfeed.dev`) — Frontend / Fullstack Lead
+* `NestJS Framework` — Status: `READY` | Provider: `openai` | Key: `df_live_nest_9f83a2bc81e74a1`
+* `Next.js App Router` — Status: `READY` | Provider: `openai` | Key: `df_live_next_1d48c0ba49e29a3`
+* `Tailwind CSS` — Status: `READY` | Provider: `openai` | Key: `df_live_tw_3c92e1af78a10bc`
+
+### 2. Bob Martinez (`bob@docsfeed.dev`) — AI / ML Systems Engineer
+* `LangChain Python` — Status: `READY` | Provider: `local` | Key: `df_live_lang_7a42d0fa55b91cf`
+* `Hugging Face Transformers` — Status: `CRAWLING` | Provider: `local` | Key: `df_live_hf_4f81c9be22e47aa`
+* `PyTorch Documentation` — Status: `PENDING` | Provider: `local` | Key: `df_live_torch_8c17b5fe90a34cb`
+
+### 3. Dev Contributor (`demo@docsfeed.dev`) — Sandbox & Edge Cases
+* `Prisma ORM Reference` — Status: `READY` | Provider: `openai` | Key: `df_live_prisma_7b29a1ee32c84f5`
+* `Model Context Protocol Spec` — Status: `READY` | Provider: `openai` | Key: `df_live_mcp_0a12e3dc45f67ba`
+* `Docker Engine & Compose Docs` — Status: `FAILED` | Provider: `openai` | Key: `df_live_dock_5d90e2ac66f12fe`
+
+---
 
 # Happy Coding! 🚀
 
